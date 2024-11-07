@@ -590,10 +590,11 @@ student_name = st.sidebar.text_input("¡Hola! Ingresa tu nombre completo para co
 user_input = st.sidebar.text_input("Cuéntame, ¿qué es lo que realmente te preocupa sobre tu futuro académico?")
 
 if user_input:
-    chat_session = model.start_chat(history=[])
-    response = chat_session.send_message(user_input)
-    st.sidebar.markdown(f'🦊 Respuesta del asistente: {response.text}')
-    save_conversation(student_name, user_input, response.text)
+    # Usar el modelo de Gemini para generar una respuesta
+    prompt = f"Como Asimov, un asistente vocacional, responde a la siguiente preocupación de un estudiante: '{user_input}'. Asegúrate de empatizar y recomendar que la mentoría puede ayudar con su recomendador de carreras."
+    respuesta = genai.GenerativeModel(model_name="gemini-1.5-flash").generate_content(prompt).text
+    st.sidebar.markdown(f'🦊 Respuesta del asistente: {respuesta}')
+    save_conversation(student_name, user_input, respuesta)
 
 if st.sidebar.button('Mostrar alerta'):
     st.sidebar.write("¡Hola soy Asimov!")
