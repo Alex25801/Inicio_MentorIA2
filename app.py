@@ -1,13 +1,38 @@
+from pyexpat import model
 import streamlit as st
 import os
 import google.generativeai as genai
-from config import GEMINI_API_KEY
+import sqlite3
 
 # Configuración de Gemini
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")  # Asegúrate de que esta variable de entorno esté configurada
 genai.configure(api_key=GEMINI_API_KEY)
 
+def init_db():
+    conn = sqlite3.connect('chatbot.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS student_advising (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_name TEXT,
+            user_input TEXT,
+            bot_response TEXT
+        )
+    ''')
+    conn.commit()
+    return conn
+
+def save_conversation(student_name, user_input, bot_response):
+    conn = init_db()
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO student_advising (student_name, user_input, bot_response)
+        VALUES (?, ?, ?)
+    ''', (student_name, user_input, bot_response))
+    conn.commit()
+    conn.close()
+
 def generar_recomendacion(intereses, habilidades, rendimiento):
-    # Configuración del modelo
     generation_config = {
         "temperature": 0.7,
         "top_p": 0.95,
@@ -20,7 +45,6 @@ def generar_recomendacion(intereses, habilidades, rendimiento):
         generation_config=generation_config,
     )
     
-    # Definir universidades y carreras según áreas de especialización y continentes
     universidades = {
         "Historia": {
             "Excelente": {
@@ -119,25 +143,21 @@ def generar_recomendacion(intereses, habilidades, rendimiento):
         # Agregar más áreas de especialización de manera similar...
     }
     
-    # Generar el prompt
     prompt = f"""
     Basándote en la siguiente información de un estudiante:
     
     Intereses: {intereses}
     Habilidades: {habilidades}
-    Rendimiento acadmico: {rendimiento}
+    Rendimiento académico: {rendimiento}
     
     Sugiere posibles trayectorias educativas y profesionales. Proporciona al menos 3 opciones 
     con una breve explicación de por qué podrían ser adecuadas.
     """
     
     respuesta = modelo.generate_content(prompt)
-    
-    # Agregar recomendaciones de universidades y carreras
     recomendaciones = respuesta.text
     area_especializacion = ""
     
-    # Determinar el área de especialización basada en los intereses
     for area in universidades.keys():
         if area in intereses:
             area_especializacion = area
@@ -156,7 +176,6 @@ def generar_recomendacion(intereses, habilidades, rendimiento):
 
 def test_cultura_general():
     st.subheader("Prueba de Cultura General")
-    
     preguntas = [
         {
             "pregunta": "¿Cuál es la capital de Francia?",
@@ -266,7 +285,6 @@ def test_cultura_general():
     ]
     
     st.write("Responde las siguientes preguntas:")
-    
     respuestas_usuario = {}
     for i, pregunta in enumerate(preguntas):
         respuesta = st.radio(pregunta["pregunta"], pregunta["opciones"], key=f"pregunta_{i}")
@@ -275,58 +293,22 @@ def test_cultura_general():
     if st.button("Verificar respuestas", key="verificar_cultura_general"):
         puntuacion = 0
         for i, pregunta in enumerate(preguntas):
-            # Mostrar la pregunta y las opciones
             st.write(f"**{pregunta['pregunta']}**")
             respuesta_usuario = respuestas_usuario[i]
             st.write(f"Tu respuesta: {respuesta_usuario}")
             
             if respuesta_usuario == pregunta["respuesta_correcta"]:
-                # Resaltar la respuesta correcta
                 st.markdown(f"<div style='background-color: #d4edda; padding: 5px;'>¡Correcto! ✅</div>", unsafe_allow_html=True)
                 puntuacion += 1
             else:
-                # Mostrar la respuesta correcta si se equivocó
                 st.markdown(f"<div style='background-color: #f8d7da; padding: 5px;'>Respuesta correcta: {pregunta['respuesta_correcta']} ❌</div>", unsafe_allow_html=True)
         
         st.success(f"Has obtenido {puntuacion} de {len(preguntas)} puntos.")
-        
-        # Proporcionar habilidades basadas en la puntuación
-        if puntuacion == len(preguntas):
-            st.balloons()
-            st.write("¡Excelente! Tienes un amplio conocimiento de cultura general.")
-            st.write("Habilidades que podrías desarrollar: Historia o Ciencias Sociales.")
-        elif puntuacion >= len(preguntas) * 0.75:  # 15 o más
-            st.write("Buen trabajo. Tienes un buen nivel de cultura general, pero aún puedes mejorar.")
-            st.write("Habilidades que podrías desarrollar:")
-            st.write("- Revisa conceptos de historia y geografía.")
-            st.write("- Practica más preguntas de matemáticas.")
-            st.write("- Lee más sobre biología y anatomía.")
-            st.write("Podrías enfocarte en Biología o Economía.")
-        elif puntuacion >= len(preguntas) * 0.5:  # 10 a 14
-            st.write("Hay espacio para mejorar. Te recomendamos estudiar más sobre estos temas.")
-            st.write("Habilidades que podrías desarrollar:")
-            st.write("- Dedica tiempo a estudiar historia y geografía.")
-            st.write("- Practica ejercicios de matemáticas regularmente.")
-            st.write("- Lee libros o artículos sobre biologa y anatomía.")
-            st.write("- Considera unirte a grupos de estudio o foros en línea para discutir estos temas.")
-            st.write("Podrías enfocarte en Matemáticas o Ciencias de la Salud.")
-        else:  # Menos de 10
-            st.write("Es un buen momento para reflexionar sobre tus intereses y áreas de mejora.")
-            st.write("Habilidades que podrías desarrollar:")
-            st.write("- Dedica tiempo a estudiar historia y geografía.")
-            st.write("- Practica ejercicios de matemáticas regularmente.")
-            st.write("- Lee libros o artículos sobre biología y anatomía.")
-            st.write("- Considera unirte a grupos de estudio o foros en línea para discutir estos temas.")
-            st.write("Podrías enfocarte en Educación o Ciencias Sociales.")
-        
-        # Mensaje motivacional
-        st.write("Recuerda que el conocimiento es poder. Cada esfuerzo que hagas para aprender más te acercará a tus metas. ¡Sigue adelante y nunca dejes de aprender!")
+        # ... (mantén el resto de tu lógica de puntuación aquí) ...
 
 def cuestionario_habilidades():
     st.subheader("Cuestionario de Habilidades Fuertes y Blandas")
-    
     respuestas = {}
-    
     preguntas = [
         "¿Cómo prefieres trabajar en un proyecto?",
         "Cuando enfrentas un problema, ¿cómo sueles abordarlo?",
@@ -362,7 +344,6 @@ def cuestionario_habilidades():
         for i, respuesta in respuestas.items():
             st.write(f"{preguntas[i]}: {respuesta}")
         
-        # Análisis de habilidades
         habilidades = analizar_habilidades(respuestas)
         st.subheader("Análisis de Habilidades")
         st.write(habilidades)
@@ -432,9 +413,8 @@ def analizar_habilidades(respuestas):
 
 def preguntas_api():
     st.subheader("Descubre tus Habilidades")
-
     st.write("¡Hola! Estoy aquí para ayudarte a descubrir tus habilidades y cómo pueden influir en tu trayectoria educativa y profesional. Responde las siguientes preguntas para que podamos conocerte mejor.")
-
+    
     preguntas = [
         {
             "pregunta": "¿Qué actividad disfrutas más en tu tiempo libre?",
@@ -506,12 +486,11 @@ def preguntas_api():
     respuestas_usuario = {}
     for i, pregunta in enumerate(preguntas):
         st.write(f"**{pregunta['pregunta']}**")
-        st.write(f"*{pregunta['explicacion']}*")  # Explicación de la pregunta
+        st.write(f"*{pregunta['explicacion']}*")
         respuesta = st.radio("Selecciona una opción:", pregunta["opciones"], key=f"pregunta_api_{i}")
         respuestas_usuario[i] = respuesta
     
     if st.button("Enviar respuestas", key="enviar_api"):
-        # Análisis de habilidades
         habilidades = analizar_habilidades(respuestas_usuario)
         st.subheader("Análisis de Habilidades")
         st.write(habilidades)
@@ -551,7 +530,7 @@ with tab3:
 with tab4:
     preguntas_api()
 
-# Modificar el estilo CSS para los nuevos colores y el fondo blanco de los inputs en la barra lateral
+# Estilo CSS para la aplicación
 st.markdown(
     """
     <style>
@@ -596,156 +575,27 @@ st.markdown(
     }
     [data-testid="stSidebar"] * {
         color: #000000 !important;  /* Texto negro */
-    }git 
-    
-    /* Estilo para el texto en la sección "Cómo utilizar la herramienta" */
-    .como-utilizar {
-        color: #FFFFFF;  /* Texto blanco */
-    }
-    
-    /* Estilo para los campos de entrada de texto en la barra lateral */
-    [data-testid="stSidebar"] .stTextInput > div > div > input {
-        background-color: white;
-        color: black;
-    }
-    
-    /* Estilo para las áreas de texto en la barra lateral */
-    [data-testid="stSidebar"] .stTextArea > div > div > textarea {
-        background-color: white;
-        color: black;
-    }
-    
-    /* Estilo para la barra transportadora de la barra lateral */
-    [data-testid="stSidebar"] .stScrollbar {
-        background-color: #0A192F;  /* Fondo azul oscuro para que coincida con el tema */
-    }
-
-    [data-testid="stSidebar"] .stScrollbar:hover {
-        background-color: #1E2D3D;  /* Un poco más claro al pasar el mouse */
-    }
-
-    /* Estilo para el "pulgar" de la barra transportadora */
-    [data-testid="stSidebar"] .stScrollbar > div {
-        background-color: #000000 !important;  /* Negro */
-    }
-
-    [data-testid="stSidebar"] .stScrollbar > div:hover {
-        background-color: #333333 !important;  /* Gris oscuro al pasar el mouse */
     }
     </style>
     """,
     unsafe_allow_html=True
 )
-
-# Estilo CSS para cambiar el texto a negro en la sección de instrucciones
-st.markdown(
-    """
-    <style>
-    .instrucciones {
-        color: #000000; /* Texto negro */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# Estilo CSS para cambiar el texto a negro en la pestaña "Cómo utilizar la herramienta"
-st.markdown(
-    """
-    <style>
-    .como-utilizar {
-        color: #000000; /* Texto negro */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# En la sección de "Cómo utilizar la herramienta"
-
-
-
-import streamlit as st
-import google.generativeai as genai
-from config import GEMINI_API_KEY
-import os
-import sqlite3
-import requests
-
-# Configuración de Gemini
-genai.configure(api_key=GEMINI_API_KEY)
-
-# Configuración del modelo
-generation_config = {
-    "temperature": 1,
-    "top_p": 0.95,
-    "top_k": 40,
-    "max_output_tokens": 8192,
-    "response_mime_type": "text/plain",
-}
-
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
-    generation_config=generation_config,
-)
-
-# Conectar a la base de datos SQLite
-def init_db():
-    conn = sqlite3.connect('chatbot.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS student_advising (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            student_name TEXT,
-            user_input TEXT,
-            bot_response TEXT
-        )
-    ''')
-    conn.commit()
-    return conn
-
-# Guardar la conversación en la base de datos
-def save_conversation(student_name, user_input, bot_response):
-    conn = init_db()
-    cursor = conn.cursor()
-    cursor.execute('''
-        INSERT INTO student_advising (student_name, user_input, bot_response)
-        VALUES (?, ?, ?)
-    ''', (student_name, user_input, bot_response))
-    conn.commit()
-    conn.close()
 
 # Agregar la barra lateral con el chatbot Asimov
 st.sidebar.markdown('<div class="sidebar-content">', unsafe_allow_html=True)
-
-# Agregar la imagen en la parte superior de la barra lateral
-st.sidebar.image("logui.jpg", width=200)  # Ajusta el ancho según sea necesario
-
+st.sidebar.image("logui.jpg", width=200)  # Asegúrate de que esta imagen esté en la ruta correcta
 st.sidebar.title("Asimov - Asistente Vocacional")
 
-# Mover la interacción del usuario a la barra lateral
 student_name = st.sidebar.text_input("¡Hola! Ingresa tu nombre completo para comenzar tu viaje hacia la carrera ideal:")
-
-user_input = st.sidebar.text_input("Cuéntame, ¿qué es lo que realmente te preocupa sobre tu futuro académico? ¿Tienes dudas sobre qué carrera elegir o cómo enfrentar la incertidumbre? Estoy aquí para escucharte y ayudarte a encontrar claridad en tu camino.")
+user_input = st.sidebar.text_input("Cuéntame, ¿qué es lo que realmente te preocupa sobre tu futuro académico?")
 
 if user_input:
-    # Usar el modelo para analizar las respuestas y recomendar carreras
     chat_session = model.start_chat(history=[])
-    response = chat_session.send_message(user_input)  # Enviar la entrada del usuario para análisis
-    
-    # Mostrar la respuesta en la barra lateral
+    response = chat_session.send_message(user_input)
     st.sidebar.markdown(f'🦊 Respuesta del asistente: {response.text}')
-    
-    # Sugerir MentorIA como herramienta
-    st.sidebar.write("En nuestra aplicación MentorIA, podemos profundizar más sobre este tema. Tenemos grandes apartados de opciones para ti.")
-    
-    # Guardar la conversación en la base de datos
     save_conversation(student_name, user_input, response.text)
 
-# Crear un botón en la barra lateral que al hacer clic muestre un mensaje
 if st.sidebar.button('Mostrar alerta'):
     st.sidebar.write("¡Hola soy Asimov!")
 
 st.sidebar.markdown('</div>', unsafe_allow_html=True)
-
-# Mover la sección "Cómo utilizar la herramienta" al final de la página principal
