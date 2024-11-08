@@ -349,30 +349,46 @@ def cuestionario_habilidades():
         st.write(habilidades)
 
 def analizar_habilidades(respuestas):
-    # Crear un prompt para el modelo Gemini
-    prompt = "Analiza las siguientes respuestas de un estudiante y proporciona un análisis detallado de sus habilidades y fortalezas:\n\n"
-    
-    preguntas = [
-        "¿Cómo prefieres trabajar en un proyecto?",
-        "Cuando enfrentas un problema, ¿cómo sueles abordarlo?",
-        "¿Qué tipo de tareas disfrutas más?",
-        "¿Cómo te sientes al hablar en público?",
-        "Cuando trabajas en grupo, ¿qué rol sueles asumir?",
-        "¿Cómo manejas el estrés o la presión?",
-        "¿Qué tan importante es para ti ayudar a los demás?",
-        "¿Cómo te sientes al aprender cosas nuevas?",
-        "¿Qué tipo de feedback prefieres recibir?",
-        "¿Qué habilidades crees que son más importantes para tu futuro?"
-    ]
-    
-    for i, pregunta in enumerate(preguntas):
-        prompt += f"{pregunta}: {respuestas[i]}\n"
+    habilidades_descubiertas = []
+    explicaciones = []
+    fortalezas = []
+    areas_mejora = []
 
-    # Usar el modelo Gemini para generar el análisis
-    modelo = genai.GenerativeModel(model_name="gemini-1.5-flash")
-    respuesta = modelo.generate_content(prompt)
-    
-    return respuesta.text
+    # Evaluar respuestas y generar explicaciones
+    if respuestas[0] == "Leer libros":
+        habilidades_descubiertas.append("Lectura crítica")
+        explicaciones.append(
+            "Leer libros mejora tu capacidad de análisis y comprensión."
+        )
+        fortalezas.append("Tienes una inclinación hacia el aprendizaje.")
+
+    if respuestas[1] == "Comunicación":
+        habilidades_descubiertas.append("Habilidades de comunicación")
+        explicaciones.append(
+            "La comunicación efectiva es esencial en casi todas las profesiones."
+        )
+        fortalezas.append("Tienes la capacidad de conectar con los demás.")
+
+    # Agregar más evaluaciones según las respuestas...
+
+    # Generar un mensaje de retroalimentación
+    mensaje = "### Análisis de tus Habilidades\n\n"
+    mensaje += "#### Fortalezas:\n"
+    if fortalezas:
+        mensaje += "- " + "\n- ".join(fortalezas) + "\n\n"
+    else:
+        mensaje += "No se identificaron fortalezas específicas.\n\n"
+
+    mensaje += "#### Habilidades Descubiertas:\n"
+    if habilidades_descubiertas:
+        mensaje += "- " + "\n- ".join(habilidades_descubiertas) + "\n\n"
+        mensaje += "#### Explicaciones:\n"
+        for exp in explicaciones:
+            mensaje += f"- {exp}\n"
+    else:
+        mensaje += "No se identificaron habilidades específicas."
+
+    return mensaje
 
 def preguntas_api():
     st.subheader("Descubre tus Habilidades")
