@@ -349,67 +349,30 @@ def cuestionario_habilidades():
         st.write(habilidades)
 
 def analizar_habilidades(respuestas):
-    habilidades_descubiertas = []
-    explicaciones = []
-    fortalezas = []
-    areas_mejora = []
+    # Crear un prompt para el modelo Gemini
+    prompt = "Analiza las siguientes respuestas de un estudiante y proporciona un análisis detallado de sus habilidades y fortalezas:\n\n"
+    
+    preguntas = [
+        "¿Cómo prefieres trabajar en un proyecto?",
+        "Cuando enfrentas un problema, ¿cómo sueles abordarlo?",
+        "¿Qué tipo de tareas disfrutas más?",
+        "¿Cómo te sientes al hablar en público?",
+        "Cuando trabajas en grupo, ¿qué rol sueles asumir?",
+        "¿Cómo manejas el estrés o la presión?",
+        "¿Qué tan importante es para ti ayudar a los demás?",
+        "¿Cómo te sientes al aprender cosas nuevas?",
+        "¿Qué tipo de feedback prefieres recibir?",
+        "¿Qué habilidades crees que son más importantes para tu futuro?"
+    ]
+    
+    for i, pregunta in enumerate(preguntas):
+        prompt += f"{pregunta}: {respuestas[i]}\n"
 
-    # Evaluar respuestas y generar explicaciones
-    if respuestas[0] == "Leer libros":
-        habilidades_descubiertas.append("Lectura crítica")
-        explicaciones.append(
-            "Leer libros no solo mejora tu capacidad de análisis y comprensión, "
-            "sino que también te expone a nuevas ideas y perspectivas. "
-            "Esto es fundamental en cualquier carrera que requiera investigación o comunicación, "
-            "ya que te permite abordar problemas desde diferentes ángulos."
-        )
-        fortalezas.append("Tienes una inclinación hacia el aprendizaje y la reflexión, "
-                         "lo que te permite adquirir nuevos conocimientos de manera efectiva.")
-
-    if respuestas[1] == "Comunicación":
-        habilidades_descubiertas.append("Habilidades de comunicación")
-        explicaciones.append(
-            "La comunicación efectiva es esencial en casi todas las profesiones. "
-            "Facilita la colaboración y la comprensión entre colegas, lo que puede llevar a un ambiente de trabajo más armonioso. "
-            "Desarrollar esta habilidad te ayudará a construir relaciones sólidas y a ser un líder más efectivo."
-        )
-        fortalezas.append("Tienes la capacidad de conectar con los demás, "
-                         "lo que te permite construir relaciones sólidas en el trabajo.")
-
-    # Continúa con el resto de las respuestas y explicaciones de manera similar...
-
-    # Generar un mensaje de retroalimentación
-    mensaje = "### Análisis de tus Habilidades\n\n"
-    mensaje += "#### Fortalezas:\n"
-    if fortalezas:
-        mensaje += "- " + "\n- ".join(fortalezas) + "\n\n"
-    else:
-        mensaje += "No se identificaron fortalezas específicas.\n\n"
-
-    mensaje += "#### Áreas de Mejora:\n"
-    if areas_mejora:
-        mensaje += "- " + "\n- ".join(areas_mejora) + "\n\n"
-    else:
-        mensaje += "No se identificaron áreas de mejora específicas.\n\n"
-
-    mensaje += "#### Habilidades Descubiertas:\n"
-    if habilidades_descubiertas:
-        mensaje += "- " + "\n- ".join(habilidades_descubiertas) + "\n\n"
-        mensaje += "#### Explicaciones:\n"
-        for exp in explicaciones:
-            mensaje += f"- {exp}\n"
-    else:
-        mensaje += "Parece que no has seleccionado opciones que indiquen habilidades específicas. ¡Reflexiona sobre tus respuestas y considera qué áreas te gustaría explorar más!"
-
-    mensaje += "\n### Reflexiones Finales\n"
-    mensaje += (
-        "Recuerda que el autoconocimiento es un viaje continuo. Es normal enfrentar desafíos y tener dudas en el camino. "
-        "Tus fortalezas son un gran recurso que puedes utilizar para avanzar, mientras que las áreas de mejora son oportunidades "
-        "para crecer y aprender. No dudes en buscar apoyo cuando lo necesites, ya sea de amigos, familiares o profesionales. "
-        "Cada paso que tomes hacia el autoconocimiento y el desarrollo personal es valioso. ¡Sigue adelante y confía en ti mismo!"
-    )
-
-    return mensaje
+    # Usar el modelo Gemini para generar el análisis
+    modelo = genai.GenerativeModel(model_name="gemini-1.5-flash")
+    respuesta = modelo.generate_content(prompt)
+    
+    return respuesta.text
 
 def preguntas_api():
     st.subheader("Descubre tus Habilidades")
@@ -583,7 +546,7 @@ st.markdown(
 
 # Agregar la barra lateral con el chatbot Asimov
 st.sidebar.markdown('<div class="sidebar-content">', unsafe_allow_html=True)
-st.sidebar.image("logui.jpg", width=200, use_column_width=True)  # Asegúrate de que esta imagen esté en la ruta correcta
+st.sidebar.image("logui.jpg", width=200, use_container_width=True)  # Cambiado a use_container_width
 st.sidebar.title("Asimov - Asistente Vocacional")
 
 student_name = st.sidebar.text_input("¡Hola! Ingresa tu nombre completo para comenzar tu viaje hacia la carrera ideal:")
