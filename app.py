@@ -519,39 +519,11 @@ st.markdown(
         color: #FFFFFF;  /* Texto blanco */
     }
     
-    /* Estilo para los botones */
-    .stButton > button {
-        background-color: #FF6347;
-        color: white;
-    }
-    
-    /* Estilo para los campos de entrada de texto */
-    .stTextInput > div > div > input {
-        background-color: #1E2D3D;  /* Azul oscuro */
-        color: white;
-    }
-    
-    /* Estilo para las áreas de texto */
-    .stTextArea > div > div > textarea {
-        background-color: #1E2D3D;  /* Azul oscuro */
-        color: white;
-    }
-    
-    /* Estilo para los selectbox */
-    .stSelectbox > div > div > select {
-        background-color: #1E2D3D;  /* Azul oscuro */
-        color: white;
-    }
-    
-    /* Estilo para los encabezados y texto general */
-    h1, h2, h3, h4, h5, h6, p, li, span {
-        color: #FFFFFF;
-    }
-    
     /* Estilo para la barra lateral */
     [data-testid="stSidebar"] {
         background-color: #D3D3D3;  /* Gris claro */
         padding: 10px;  /* Añadir un poco de espacio */
+        height: 100vh;  /* Asegurarse de que la barra lateral ocupe toda la altura */
     }
     [data-testid="stSidebar"] * {
         color: #000000 !important;  /* Texto negro */
