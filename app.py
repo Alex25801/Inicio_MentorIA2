@@ -562,7 +562,7 @@ st.markdown(
 
 # Agregar la barra lateral con el chatbot Asimov
 st.sidebar.markdown('<div class="sidebar-content">', unsafe_allow_html=True)
-st.sidebar.image("logui.jpg", width=200, use_column_width=True)  # Asegúrate de que esta imagen esté en la ruta correcta
+st.sidebar.image("logui.jpg", width=200, use_container_width=True)  # Cambiado a use_container_width
 st.sidebar.title("Asimov - Asistente Vocacional")
 
 student_name = st.sidebar.text_input("¡Hola! Ingresa tu nombre completo para comenzar tu viaje hacia la carrera ideal:")
