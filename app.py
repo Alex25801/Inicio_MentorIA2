@@ -551,9 +551,15 @@ st.markdown(
     /* Estilo para la barra lateral */
     [data-testid="stSidebar"] {
         background-color: #D3D3D3;  /* Gris claro */
+        padding: 10px;  /* Añadir un poco de espacio */
     }
     [data-testid="stSidebar"] * {
         color: #000000 !important;  /* Texto negro */
+    }
+    
+    /* Asegurarse de que el contenido de la barra lateral sea visible */
+    .sidebar-content {
+        display: block;  /* Asegurarse de que el contenido se muestre */
     }
     </style>
     """,
