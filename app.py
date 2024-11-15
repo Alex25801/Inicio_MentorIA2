@@ -199,7 +199,7 @@ def test_cultura_general():
         },
         {
             "pregunta": "¿Cuál es la unidad básica de la vida?",
-            "opciones": ["Tejido", "Órgano", "Célula", "Sistema"],
+            "opciones": ["Tejido", "��rgano", "Célula", "Sistema"],
             "respuesta_correcta": "Célula"
         },
         {
@@ -401,7 +401,7 @@ def preguntas_api():
             "explicacion": "Esta pregunta nos ayuda a entender tus intereses y pasiones, que son fundamentales para tu desarrollo personal."
         },
         {
-            "pregunta": "¿Cuál de las siguientes habilidades consideras ms importante para tu carrera?",
+            "pregunta": "¿Cuál de las siguientes habilidades consideras más importante para tu carrera?",
             "opciones": ["Comunicación", "Análisis de datos", "Creatividad", "Liderazgo"],
             "explicacion": "Identificar tus habilidades clave puede guiarte hacia una carrera que se alinee con tus fortalezas."
         },
