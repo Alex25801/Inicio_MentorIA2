@@ -471,45 +471,7 @@ st.markdown(
         border: 2px solid #0056b3 !important; /* Bordes azules oscuros */
         border-radius: 5px; /* Bordes redondeados */
         padding: 10px; /* Espaciado interno */
-    }
-    .stTextInput > div > input:focus {
-        border: 2px solid #0056b3 !important; /* Bordes azules oscuros al enfocar */
-        outline: none; /* Sin contorno al enfocar */
-    }
-    .stTextInput > div > input::placeholder {
-        color: #ffffff !important; /* Texto blanco para el placeholder */
-    }
-    .stTextInput > div > input:disabled {
-        color: #ffffff !important; /* Texto blanco para inputs deshabilitados */
-        background-color: #6c757d !important; /* Color de fondo gris para inputs deshabilitados */
-    }
-    .stTextInput > div > input:read-only {
-        color: #ffffff !important; /* Texto blanco para inputs de solo lectura */
-        background-color: #6c757d !important; /* Color de fondo gris para inputs de solo lectura */
-    }
-    .stTextArea > div > textarea {
-        color: #ffffff !important; /* Texto blanco para textarea */
-        background-color: #007BFF !important;  /* Color de fondo azul (similar al botón) */
-        border: 2px solid #0056b3 !important; /* Bordes azules oscuros */
-        border-radius: 5px; /* Bordes redondeados */
-        padding: 10px; /* Espaciado interno */
-    }
-    .stTextArea > div > textarea:focus {
-        border: 2px solid #0056b3 !important; /* Bordes azules oscuros al enfocar */
-        outline: none; /* Sin contorno al enfocar */
-    }
-    .stTextArea > div > textarea::placeholder {
-        color: #ffffff !important; /* Texto blanco para el placeholder */
-    }
-    .stTextArea > div > textarea:disabled {
-        color: #ffffff !important; /* Texto blanco para textarea deshabilitado */
-        background-color: #6c757d !important; /* Color de fondo gris para textarea deshabilitado */
-    }
-    .stTextArea > div > textarea:read-only {
-        color: #ffffff !important; /* Texto blanco para textarea de solo lectura */
-        background-color: #6c757d !important; /* Color de fondo gris para textarea de solo lectura */
-    }
-
+   
     </style>
     """,
     unsafe_allow_html=True
