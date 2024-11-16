@@ -451,13 +451,28 @@ st.markdown(
     
     /* Estilo para la barra lateral */
     [data-testid="stSidebar"] {
-       
+        background-color: #D3D3D3;  /* Gris claro */
         padding: 10px;  /* Añadir un poco de espacio */
-        height: auto;  /* Cambiado para que la barra lateral ajuste su altura automáticamente */
+        height: 100vh;  /* Asegurarse de que la barra lateral ocupe toda la altura */
     }
     [data-testid="stSidebar"] * {
         color: #000000 !important;  /* Texto negro */
-   
+    }
+    
+    /* Asegurarse de que el contenido de la barra lateral sea visible */
+    .sidebar-content {
+        display: block;  /* Asegurarse de que el contenido se muestre */
+    }
+
+    /* Estilo para los inputs de la barra lateral */
+    .stTextInput > div > input {
+        color: #ffffff !important; /* Texto blanco */
+        background-color: #007BFF !important;  /* Color de fondo azul (similar al botón) */
+        border: 2px solid #0056b3 !important; /* Bordes azules oscuros */
+        border-radius: 5px; /* Bordes redondeados */
+        padding: 10px; /* Espaciado interno */
+    }
+
     </style>
     """,
     unsafe_allow_html=True
@@ -467,7 +482,7 @@ st.markdown(
 
 # Agregar la barra lateral con el chatbot Asimov
 st.sidebar.markdown('<div class="sidebar-content">', unsafe_allow_html=True)
-
+st.sidebar.image("logui.jpg", width=200, use_container_width=True)  # Cambiado a use_container_width
 st.sidebar.title("Asimov - Asistente Vocacional")
 
 student_name = st.sidebar.text_input("¡Hola soy Asimov 🦊!. Ingresa tu nombre completo para comenzar tu viaje hacia la carrera ideal:")
