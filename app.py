@@ -446,9 +446,14 @@ st.markdown(
     /* Estilo para el cuerpo principal de la aplicación */
     .stApp {
         background-color: #0A192F;  /* Azul muy oscuro */
-        color: #FFFFFF;  /* Texto blanco */
+        color: #FFFFFF;  /* Texto blanco para el cuerpo principal */
     }
     
+    /* Estilo para el texto de Streamlit en el cuerpo principal */
+    .stMarkdown, .stText, .stSubheader, .stHeader, .stTitle, .stWrite {
+        color: #FFFFFF !important;  /* Texto blanco */
+    }
+
     /* Estilo para la barra lateral */
     [data-testid="stSidebar"] {
         background-color: #D3D3D3;  /* Gris claro */
@@ -456,7 +461,7 @@ st.markdown(
         height: 100vh;  /* Asegurarse de que la barra lateral ocupe toda la altura */
     }
     [data-testid="stSidebar"] * {
-        color: #000000 !important;  /* Texto negro */
+        color: #000000 !important;  /* Texto negro en la barra lateral */
     }
     
     /* Asegurarse de que el contenido de la barra lateral sea visible */
@@ -482,7 +487,6 @@ st.markdown(
 
 # Agregar la barra lateral con el chatbot Asimov
 st.sidebar.markdown('<div class="sidebar-content">', unsafe_allow_html=True)
-
 st.sidebar.title("Asimov - Asistente Vocacional")
 
 student_name = st.sidebar.text_input("¡Hola soy Asimov 🦊!. Ingresa tu nombre completo para comenzar tu viaje hacia la carrera ideal:")
