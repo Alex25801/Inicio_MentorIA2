@@ -446,7 +446,7 @@ st.markdown(
     /* Estilo para el cuerpo principal de la aplicación */
     .stApp {
         background-color: #0A192F;  /* Azul muy oscuro */
-        color: #FFFFFF;  /* Texto blanco para el cuerpo principal */
+        color: #FFFFFF !important;  /* Texto blanco para el cuerpo principal */
     }
     
     /* Estilo para el texto de Streamlit en el cuerpo principal */
