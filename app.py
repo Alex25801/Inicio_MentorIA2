@@ -199,18 +199,13 @@ def test_cultura_general():
         },
         {
             "pregunta": "¿Cuál es la unidad básica de la vida?",
-            "opciones": ["Tejido", "��rgano", "Célula", "Sistema"],
+            "opciones": ["Tejido", "Órgano", "Célula", "Sistema"],
             "respuesta_correcta": "Célula"
         },
         {
             "pregunta": "¿En qué año comenzó la Segunda Guerra Mundial?",
             "opciones": ["1939", "1941", "1945", "1936"],
             "respuesta_correcta": "1939"
-        },
-        {
-            "pregunta": "¿Cuál es el resultado de 7 + 8?",
-            "opciones": ["14", "15", "16", "17"],
-            "respuesta_correcta": "15"
         },
         {
             "pregunta": "¿Qué tipo de hueso es el fémur?",
@@ -258,30 +253,11 @@ def test_cultura_general():
             "respuesta_correcta": "George Washington"
         },
         {
-            "pregunta": "¿Qué es un mercado?",
-            "opciones": ["Un lugar físico para comprar y vender", "Un sistema de intercambio de bienes y servicios", "Un tipo de inversión", "Una forma de ahorro"],
-            "respuesta_correcta": "Un sistema de intercambio de bienes y servicios"
-        },
-        {
             "pregunta": "¿Cuál es el continente más grande del mundo?",
             "opciones": ["África", "Asia", "América", "Europa"],
             "respuesta_correcta": "Asia"
         },
-        {
-            "pregunta": "¿Qué es la fotosíntesis?",
-            "opciones": ["Proceso de respiración", "Proceso de producción de energía en plantas", "Proceso de digestión", "Proceso de reproducción"],
-            "respuesta_correcta": "Proceso de producción de energía en plantas"
-        },
-        {
-            "pregunta": "¿Quién fue el líder de la Revolución Francesa?",
-            "opciones": ["Napoleón Bonaparte", "Maximilien Robespierre", "Luis XVI", "Georges Danton"],
-            "respuesta_correcta": "Maximilien Robespierre"
-        },
-        {
-            "pregunta": "¿Cuál es el país más poblado del mundo?",
-            "opciones": ["India", "Estados Unidos", "China", "Indonesia"],
-            "respuesta_correcta": "China"
-        }
+        # ... (mantén el resto de tu lógica de puntuación aquí) ...
     ]
     
     st.write("Responde las siguientes preguntas:")
@@ -299,54 +275,11 @@ def test_cultura_general():
             
             if respuesta_usuario == pregunta["respuesta_correcta"]:
                 st.markdown(f"<div style='background-color: #d4edda; padding: 5px;'>¡Correcto! ✅</div>", unsafe_allow_html=True)
-                puntuacion += 1
+                puntuacion += 1.25  # Cada respuesta correcta vale 1.25 puntos
             else:
                 st.markdown(f"<div style='background-color: #f8d7da; padding: 5px;'>Respuesta correcta: {pregunta['respuesta_correcta']} ❌</div>", unsafe_allow_html=True)
         
-        st.success(f"Has obtenido {puntuacion} de {len(preguntas)} puntos.")
-        # ... (mantén el resto de tu lógica de puntuación aquí) ...
-
-def cuestionario_habilidades():
-    st.subheader("Cuestionario de Habilidades Fuertes y Blandas")
-    respuestas = {}
-    preguntas = [
-        "¿Cómo prefieres trabajar en un proyecto?",
-        "Cuando enfrentas un problema, ¿cómo sueles abordarlo?",
-        "¿Qué tipo de tareas disfrutas más?",
-        "¿Cmo te sientes al hablar en público?",
-        "Cuando trabajas en grupo, ¿qué rol sueles asumir?",
-        "¿Cómo manejas el estrés o la presión?",
-        "¿Qué tan importante es para ti ayudar a los demás?",
-        "¿Cómo te sientes al aprender cosas nuevas?",
-        "¿Qué tipo de feedback prefieres recibir?",
-        "¿Qué habilidades crees que son más importantes para tu futuro?"
-    ]
-    
-    opciones = [
-        ["Solo", "En un equipo", "No tengo preferencia"],
-        ["Analizo datos", "Consulto con otros", "Confío en mi intuición"],
-        ["Tareas técnicas", "Tareas creativas", "Tareas interpersonales"],
-        ["Muy cómodo", "Algo nervioso", "Muy incómodo"],
-        ["Líder", "Mediador", "Ejecutor"],
-        ["Me mantengo enfocado", "Hablo con alguien", "Me relajo"],
-        ["Muy importante", "Algo importante", "No es prioridad"],
-        ["Emocionado", "Nervioso", "Indiferente"],
-        ["Crítico y directo", "Positivo y motivador", "Constructivo"],
-        ["Habilidades técnicas", "Habilidades interpersonales", "Habilidades de gestión"]
-    ]
-    
-    for i, pregunta in enumerate(preguntas):
-        respuesta = st.radio(pregunta, opciones[i], key=f"pregunta_habilidad_{i}")
-        respuestas[i] = respuesta
-    
-    if st.button("Enviar respuestas", key="enviar_habilidades"):
-        st.write("Tus respuestas:")
-        for i, respuesta in respuestas.items():
-            st.write(f"{preguntas[i]}: {respuesta}")
-        
-        habilidades = analizar_habilidades(respuestas)
-        st.subheader("Análisis de Habilidades")
-        st.write(habilidades)
+        st.success(f"Has obtenido {puntuacion} de 20 puntos.")
 
 def analizar_habilidades(respuestas):
     habilidades_descubiertas = []
@@ -483,7 +416,7 @@ with col2:
     st.image("descarga.jpg", width=100)
 
 # Crear pestañas
-tab1, tab2, tab3, tab4 = st.tabs(["Prueba de Cultura General", "Recomendación", "Habilidades", "Preguntas API"])
+tab1, tab2, tab3 = st.tabs(["Prueba de Cultura General", "Recomendación", "Descubre"])
 
 with tab1:
     test_cultura_general()
@@ -504,9 +437,6 @@ with tab2:
             st.warning("Por favor, ingresa tus intereses y habilidades.")
 
 with tab3:
-    cuestionario_habilidades()
-
-with tab4:
     preguntas_api()
 
 # Estilo CSS para la aplicación
@@ -533,17 +463,66 @@ st.markdown(
     .sidebar-content {
         display: block;  /* Asegurarse de que el contenido se muestre */
     }
+
+    /* Estilo para los inputs de la barra lateral */
+    .stTextInput > div > input {
+        color: #ffffff !important; /* Texto blanco */
+        background-color: #007BFF !important;  /* Color de fondo azul (similar al botón) */
+        border: 2px solid #0056b3 !important; /* Bordes azules oscuros */
+        border-radius: 5px; /* Bordes redondeados */
+        padding: 10px; /* Espaciado interno */
+    }
+    .stTextInput > div > input:focus {
+        border: 2px solid #0056b3 !important; /* Bordes azules oscuros al enfocar */
+        outline: none; /* Sin contorno al enfocar */
+    }
+    .stTextInput > div > input::placeholder {
+        color: #ffffff !important; /* Texto blanco para el placeholder */
+    }
+    .stTextInput > div > input:disabled {
+        color: #ffffff !important; /* Texto blanco para inputs deshabilitados */
+        background-color: #6c757d !important; /* Color de fondo gris para inputs deshabilitados */
+    }
+    .stTextInput > div > input:read-only {
+        color: #ffffff !important; /* Texto blanco para inputs de solo lectura */
+        background-color: #6c757d !important; /* Color de fondo gris para inputs de solo lectura */
+    }
+    .stTextArea > div > textarea {
+        color: #ffffff !important; /* Texto blanco para textarea */
+        background-color: #007BFF !important;  /* Color de fondo azul (similar al botón) */
+        border: 2px solid #0056b3 !important; /* Bordes azules oscuros */
+        border-radius: 5px; /* Bordes redondeados */
+        padding: 10px; /* Espaciado interno */
+    }
+    .stTextArea > div > textarea:focus {
+        border: 2px solid #0056b3 !important; /* Bordes azules oscuros al enfocar */
+        outline: none; /* Sin contorno al enfocar */
+    }
+    .stTextArea > div > textarea::placeholder {
+        color: #ffffff !important; /* Texto blanco para el placeholder */
+    }
+    .stTextArea > div > textarea:disabled {
+        color: #ffffff !important; /* Texto blanco para textarea deshabilitado */
+        background-color: #6c757d !important; /* Color de fondo gris para textarea deshabilitado */
+    }
+    .stTextArea > div > textarea:read-only {
+        color: #ffffff !important; /* Texto blanco para textarea de solo lectura */
+        background-color: #6c757d !important; /* Color de fondo gris para textarea de solo lectura */
+    }
+
     </style>
     """,
     unsafe_allow_html=True
 )
+
+
 
 # Agregar la barra lateral con el chatbot Asimov
 st.sidebar.markdown('<div class="sidebar-content">', unsafe_allow_html=True)
 st.sidebar.image("logui.jpg", width=200, use_container_width=True)  # Cambiado a use_container_width
 st.sidebar.title("Asimov - Asistente Vocacional")
 
-student_name = st.sidebar.text_input("¡Hola! Ingresa tu nombre completo para comenzar tu viaje hacia la carrera ideal:")
+student_name = st.sidebar.text_input("¡Hola soy Asimov 🦊!. Ingresa tu nombre completo para comenzar tu viaje hacia la carrera ideal:")
 user_input = st.sidebar.text_input("Cuéntame, ¿qué es lo que realmente te preocupa sobre tu futuro académico?")
 
 if user_input:
@@ -554,6 +533,6 @@ if user_input:
     save_conversation(student_name, user_input, respuesta)
 
 if st.sidebar.button('Mostrar alerta'):
-    st.sidebar.write("¡Hola soy Asimov!")
+    st.sidebar.write("Gracias que tenga un buen día 🦊")
 
 st.sidebar.markdown('</div>', unsafe_allow_html=True)
