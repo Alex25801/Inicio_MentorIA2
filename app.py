@@ -451,7 +451,7 @@ st.markdown(
     
     /* Estilo para la barra lateral */
     [data-testid="stSidebar"] {
-        background-color: #D3D3D3;  /* Gris claro */
+       
         padding: 10px;  /* Añadir un poco de espacio */
         height: auto;  /* Cambiado para que la barra lateral ajuste su altura automáticamente */
     }
