@@ -457,12 +457,7 @@ st.markdown(
     }
     [data-testid="stSidebar"] * {
         color: #000000 !important;  /* Texto negro */
-    }
-    
-    /* Asegurarse de que el contenido de la barra lateral sea visible */
-    .sidebar-content {
-        display: block;  /* Asegurarse de que el contenido se muestre */
-    }
+   
 
     /* Estilo para los inputs de la barra lateral */
     .stTextInput > div > input {
