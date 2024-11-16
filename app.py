@@ -458,15 +458,6 @@ st.markdown(
     [data-testid="stSidebar"] * {
         color: #000000 !important;  /* Texto negro */
    
-
-    /* Estilo para los inputs de la barra lateral */
-    .stTextInput > div > input {
-        color: #ffffff !important; /* Texto blanco */
-        background-color: #007BFF !important;  /* Color de fondo azul (similar al botón) */
-        border: 2px solid #0056b3 !important; /* Bordes azules oscuros */
-        border-radius: 5px; /* Bordes redondeados */
-        padding: 10px; /* Espaciado interno */
-   
     </style>
     """,
     unsafe_allow_html=True
